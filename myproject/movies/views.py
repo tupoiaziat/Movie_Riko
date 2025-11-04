@@ -1,11 +1,28 @@
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Movie, Actor, Director, Country, Genre
-from .serializers import MovieSerializer, ActorSerializer, DirectorSerializer, CountrySerializer, GenreSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-class MovieViewSet(viewsets.ModelViewSet):
+from .models import Movie, Actor, Director, Country, Genre
+from .serializers import MovieListSerializer, MovieDetailSerializer, ActorSerializer, DirectorSerializer, CountrySerializer, GenreSerializer
+
+class MovieListAPIView(ListAPIView):
     queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+    serializer_class = MovieListSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = {
+        'country__country_name': ['exact'],
+        'year': ['gte', 'lte'],
+        'genres__genre_name': ['exact'],
+        'status_movie': ['exact'],
+        'actors__actor_name': ['exact'],
+        'director__director_name': ['exact'],
+    }
+    search_fields = ['movie_name']
+    ordering_fields = ['year']
+
+class MovieDetailAPIView(RetrieveAPIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieDetailSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = {
         'country__country_name': ['exact'],

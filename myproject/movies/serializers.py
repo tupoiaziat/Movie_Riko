@@ -9,22 +9,22 @@ class ProfileSerializer(serializers.ModelSerializer):
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = '__all__'
+        fields = 'country_name',
 
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Director
-        fields = '__all__'
+        fields = ['director_name']
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
-        fields = '__all__'
+        fields = ['actor_name']
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = 'genre_name',
 
 class MovieLanguagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,7 +34,7 @@ class MovieLanguagesSerializer(serializers.ModelSerializer):
 class MomentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Moments
-        fields = '__all__'
+        fields = ['movie_moments']
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,14 +57,22 @@ class HistorySerializer(serializers.ModelSerializer):
         model = History
         fields = '__all__'
 
-class MovieSerializer(serializers.ModelSerializer):
-    country = CountrySerializer()
-    director = DirectorSerializer()
-    actors = ActorSerializer(many=True)
-    genres = GenreSerializer(many=True)
-    languages = MovieLanguagesSerializer(many=True, read_only=True)
-    ratings = RatingSerializer(many=True, read_only=True)
-
+class MovieListSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
     class Meta:
         model = Movie
-        fields = '__all__'
+        fields = ['id', 'movie_image', 'movie_name', 'year', 'country', 'genres', 'status_movie']
+
+class MovieDetailSerializer(serializers.ModelSerializer):
+    country = CountrySerializer(read_only=True)
+    genres = GenreSerializer(many=True, read_only=True)
+    actors = ActorSerializer(many=True, read_only=True)
+    director = DirectorSerializer(read_only=True)
+    moments_frame = MomentsSerializer(many=True, read_only=True)
+    class Meta:
+        model = Movie
+        fields = ['movie_image', 'movie_name', 'year', 'country',
+                  'genres', 'director',
+                  'actors', 'types', 'movie_time',
+                  'description', 'movie_trailer', 'status_movie', 'moments_frame']

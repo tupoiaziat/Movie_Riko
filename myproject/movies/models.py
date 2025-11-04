@@ -11,11 +11,17 @@ class Profile(models.Model):
 class Country(models.Model):
     country_name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.country_name
+
 class Director(models.Model):
     director_name = models.CharField(max_length=100)
     bio = models.TextField()
     age = models.PositiveIntegerField()
     director_image = models.ImageField(upload_to='directors/')
+
+    def __str__(self):
+        return self.director_name
 
 class Actor(models.Model):
     actor_name = models.CharField(max_length=100)
@@ -23,14 +29,20 @@ class Actor(models.Model):
     age = models.PositiveIntegerField()
     actor_image = models.ImageField(upload_to='actors/')
 
+    def __str__(self):
+        return self.actor_name
+
 class Genre(models.Model):
     genre_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.genre_name
 
 class Movie(models.Model):
     STATUS_CHOICES = [('pro', 'Pro'), ('simple', 'Simple')]
     TYPES_CHOICES = [(144, '144p'), (360, '360p'), (480, '480p'), (720, '720p'), (1080, '1080p')]
     movie_name = models.CharField(max_length=200)
-    year = models.PositiveIntegerField()
+    year = models.IntegerField()
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True)
     actors = models.ManyToManyField(Actor)
@@ -42,14 +54,17 @@ class Movie(models.Model):
     movie_image = models.ImageField(upload_to='movies/')
     status_movie = models.CharField(max_length=6, choices=STATUS_CHOICES, default='simple')
 
+    def __str__(self):
+        return self.movie_name
+
 class MovieLanguages(models.Model):
     language = models.CharField(max_length=50)
     video = models.FileField(upload_to='movie_languages/')
     movie = models.ForeignKey(Movie, related_name='languages', on_delete=models.CASCADE)
 
 class Moments(models.Model):
-    movie = models.ForeignKey(Movie, related_name='moments', on_delete=models.CASCADE)
-    movie_moments = models.TextField()
+    movie = models.ForeignKey(Movie, related_name='moments_frame', on_delete=models.CASCADE)
+    movie_moments = models.ImageField(upload_to='movie_moments/')
 
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
