@@ -4,12 +4,12 @@ from .models import *
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['first_name']
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
-        fields = 'country_name',
+        fields = ['country_name',]
 
 class DirectorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,12 +24,12 @@ class ActorSerializer(serializers.ModelSerializer):
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = 'genre_name',
+        fields = ['genre_name',]
 
 class MovieLanguagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieLanguages
-        fields = '__all__'
+        fields = ['language', 'video']
 
 class MomentsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,9 +37,12 @@ class MomentsSerializer(serializers.ModelSerializer):
         fields = ['movie_moments']
 
 class RatingSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer()
+    created_date = serializers.DateTimeField(format='%d-%m-%Y %H:%M', read_only=True)
+
     class Meta:
         model = Rating
-        fields = '__all__'
+        fields = ['id', 'user', 'parent', 'stars', 'text', 'created_date']
 
 class FavoriteMovieSerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,9 +73,11 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     actors = ActorSerializer(many=True, read_only=True)
     director = DirectorSerializer(read_only=True)
     moments_frame = MomentsSerializer(many=True, read_only=True)
+    languages = MovieLanguagesSerializer(many=True, read_only=True)
+    ratings = RatingSerializer(many=True, read_only=True)
     class Meta:
         model = Movie
         fields = ['movie_image', 'movie_name', 'year', 'country',
                   'genres', 'director',
                   'actors', 'types', 'movie_time',
-                  'description', 'movie_trailer', 'status_movie', 'moments_frame']
+                  'description', 'movie_trailer', 'status_movie', 'moments_frame', 'languages', 'ratings']

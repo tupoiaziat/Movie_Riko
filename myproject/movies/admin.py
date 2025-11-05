@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 from modeltranslation.admin import TranslationAdmin
 
-@admin.register(Country, Director, Actor, Genre, Movie, MovieLanguages, Rating)
+@admin.register(Country, Director, Actor, Genre, Movie, MovieLanguages)
 class ProductAdmin(TranslationAdmin):
     class Media:
         js = (
@@ -21,5 +21,6 @@ admin.site.register(Moments)
 admin.site.register(Favorite)
 admin.site.register(FavoriteMovie)
 admin.site.register(History)
+admin.site.register(Rating)
 
 

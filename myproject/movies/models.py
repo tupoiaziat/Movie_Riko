@@ -62,16 +62,23 @@ class MovieLanguages(models.Model):
     video = models.FileField(upload_to='movie_languages/')
     movie = models.ForeignKey(Movie, related_name='languages', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f'{self.movie}, {self.language}'
+
 class Moments(models.Model):
     movie = models.ForeignKey(Movie, related_name='moments_frame', on_delete=models.CASCADE)
     movie_moments = models.ImageField(upload_to='movie_moments/')
 
 class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     movie = models.ForeignKey(Movie, related_name='ratings', on_delete=models.CASCADE)
-    stars = models.PositiveSmallIntegerField()  # Range 1 to 10, validation on serializer/form level
+    stars = models.PositiveIntegerField(choices=[(i, str(i))for i in range(1, 11)])
     text = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user}, {self.movie}'
 
 class Favorite(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

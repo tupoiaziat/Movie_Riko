@@ -1,4 +1,4 @@
-from .models import Country, Director, Actor, Genre, Movie, MovieLanguages, Rating
+from .models import Country, Director, Actor, Genre, Movie, MovieLanguages
 from modeltranslation.translator import TranslationOptions,register
 
 @register(Country)
@@ -25,9 +25,7 @@ class ProductTranslationOptions(TranslationOptions):
 class ProductTranslationOptions(TranslationOptions):
     fields = ('language',)
 
-@register(Rating)
-class ProductTranslationOptions(TranslationOptions):
-    fields = ('text',)
+
 
 
 
